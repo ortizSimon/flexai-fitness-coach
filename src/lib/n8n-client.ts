@@ -58,8 +58,6 @@ export async function sendMessage(
 
     const data: any = await response.json();
 
-    console.log('n8n response:', data);
-
     // n8n returns an array with objects
     const responseData = Array.isArray(data) ? data[0] : data;
 
