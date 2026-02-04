@@ -56,13 +56,30 @@ export async function sendMessage(
       );
     }
 
-    const data: N8nResponse = await response.json();
+    const data: any = await response.json();
 
-    if (!data.output) {
-      throw new N8nClientError('Invalid response from n8n: missing output field');
+    console.log('n8n response:', data);
+
+    // Try different response formats
+    if (data.output) {
+      return data.output;
     }
 
-    return data.output;
+    if (data.message) {
+      return data.message;
+    }
+
+    if (data.response) {
+      return data.response;
+    }
+
+    if (typeof data === 'string') {
+      return data;
+    }
+
+    // If we get here, log the full response
+    console.error('Unexpected n8n response format:', data);
+    throw new N8nClientError(`Invalid response from n8n: ${JSON.stringify(data)}`);
   } catch (error) {
     if (error instanceof N8nClientError) {
       throw error;
