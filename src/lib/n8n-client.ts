@@ -60,21 +60,24 @@ export async function sendMessage(
 
     console.log('n8n response:', data);
 
+    // n8n returns an array with objects
+    const responseData = Array.isArray(data) ? data[0] : data;
+
     // Try different response formats
-    if (data.output) {
-      return data.output;
+    if (responseData.output) {
+      return responseData.output;
     }
 
-    if (data.message) {
-      return data.message;
+    if (responseData.message) {
+      return responseData.message;
     }
 
-    if (data.response) {
-      return data.response;
+    if (responseData.response) {
+      return responseData.response;
     }
 
-    if (typeof data === 'string') {
-      return data;
+    if (typeof responseData === 'string') {
+      return responseData;
     }
 
     // If we get here, log the full response
